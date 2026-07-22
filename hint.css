@@ -1,0 +1,178 @@
+/*
+ * enter-post hint bubble styles. All rules are scoped under .enterpost-hint
+ * to avoid bleeding into (or being clobbered by) host-page styles.
+ */
+
+.enterpost-hint {
+  all: initial;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 2147483647;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #f5f7fa;
+  background: rgba(24, 26, 32, 0.94);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 8px 10px;
+  min-width: 180px;
+  max-width: 280px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28), 0 2px 6px rgba(0, 0, 0, 0.18);
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 140ms ease-out, transform 140ms ease-out;
+  pointer-events: none;
+  visibility: hidden;
+  box-sizing: border-box;
+}
+
+.enterpost-hint.enterpost-hint--visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  visibility: visible;
+}
+
+.enterpost-hint.enterpost-hint--offscreen {
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.enterpost-hint.enterpost-hint--below {
+  transform: translateY(-4px);
+}
+.enterpost-hint.enterpost-hint--below.enterpost-hint--visible {
+  transform: translateY(0);
+}
+
+.enterpost-hint__head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.enterpost-hint__brand {
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #cbd5e1;
+}
+
+.enterpost-hint__sep {
+  color: #64748b;
+}
+
+.enterpost-hint__platform {
+  color: #e2e8f0;
+  font-weight: 500;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.enterpost-hint__close {
+  all: unset;
+  cursor: pointer;
+  color: #94a3b8;
+  font-size: 16px;
+  line-height: 1;
+  padding: 0 4px;
+  border-radius: 4px;
+}
+.enterpost-hint__close:hover {
+  color: #f8fafc;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.enterpost-hint__row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.enterpost-hint__label {
+  color: #94a3b8;
+  min-width: 52px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.enterpost-hint__combo {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.enterpost-hint__plus {
+  color: #64748b;
+  font-size: 11px;
+}
+
+.enterpost-hint__kbd {
+  display: inline-block;
+  min-width: 20px;
+  padding: 2px 6px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11px;
+  font-weight: 500;
+  text-align: center;
+  color: #cbd5e1;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+}
+
+/* Highlight for combos that differ from the site's native mapping. */
+.enterpost-hint__kbd--changed {
+  color: #0f172a;
+  background: linear-gradient(180deg, #fde68a 0%, #fbbf24 100%);
+  border-color: #d97706;
+  box-shadow: 0 0 0 1px rgba(251, 191, 36, 0.35), 0 0 8px rgba(251, 191, 36, 0.45);
+}
+
+.enterpost-hint__note {
+  margin-top: 6px;
+  font-size: 11px;
+  color: #94a3b8;
+  min-height: 0;
+}
+.enterpost-hint__note:empty { display: none; }
+
+.enterpost-hint__note--muted {
+  color: #64748b;
+  font-style: italic;
+}
+
+.enterpost-hint__note--warn {
+  color: #fca5a5;
+}
+
+@media (prefers-color-scheme: light) {
+  .enterpost-hint {
+    color: #0f172a;
+    background: rgba(255, 255, 255, 0.98);
+    border-color: rgba(15, 23, 42, 0.08);
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.14), 0 2px 6px rgba(15, 23, 42, 0.08);
+  }
+  .enterpost-hint__brand { color: #475569; }
+  .enterpost-hint__sep { color: #94a3b8; }
+  .enterpost-hint__platform { color: #0f172a; }
+  .enterpost-hint__close { color: #64748b; }
+  .enterpost-hint__close:hover { color: #0f172a; background: rgba(15, 23, 42, 0.06); }
+  .enterpost-hint__label { color: #64748b; }
+  .enterpost-hint__kbd {
+    color: #0f172a;
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+  }
+  .enterpost-hint__note { color: #64748b; }
+  .enterpost-hint__note--muted { color: #94a3b8; }
+  .enterpost-hint__note--warn { color: #b91c1c; }
+}

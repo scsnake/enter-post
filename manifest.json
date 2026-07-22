@@ -1,0 +1,113 @@
+{
+  "manifest_version": 3,
+  "name": "enter-post",
+  "version": "0.1.0",
+  "description": "Unify Enter / Ctrl+Enter / Shift+Enter behavior across social + chat sites (X, Reddit, Discord, Slack, WhatsApp, and more).",
+  "permissions": ["storage"],
+  "host_permissions": [
+    "*://x.com/*",
+    "*://*.x.com/*",
+    "*://twitter.com/*",
+    "*://*.twitter.com/*",
+    "*://threads.net/*",
+    "*://*.threads.net/*",
+    "*://threads.com/*",
+    "*://*.threads.com/*",
+    "*://bsky.app/*",
+    "*://*.bsky.app/*",
+    "*://mastodon.social/*",
+    "*://mastodon.online/*",
+    "*://mstdn.social/*",
+    "*://mas.to/*",
+    "*://mastodon.world/*",
+    "*://reddit.com/*",
+    "*://*.reddit.com/*",
+    "*://linkedin.com/*",
+    "*://*.linkedin.com/*",
+    "*://facebook.com/*",
+    "*://*.facebook.com/*",
+    "*://instagram.com/*",
+    "*://*.instagram.com/*",
+    "*://youtube.com/*",
+    "*://*.youtube.com/*",
+    "*://tiktok.com/*",
+    "*://*.tiktok.com/*",
+    "*://discord.com/*",
+    "*://*.discord.com/*",
+    "*://app.slack.com/*",
+    "*://slack.com/*",
+    "*://*.slack.com/*",
+    "*://web.whatsapp.com/*",
+    "*://messenger.com/*",
+    "*://*.messenger.com/*",
+    "*://web.telegram.org/*",
+    "*://github.com/*",
+    "*://*.github.com/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["hint.css"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "*://x.com/*",
+        "*://*.x.com/*",
+        "*://twitter.com/*",
+        "*://*.twitter.com/*",
+        "*://threads.net/*",
+        "*://*.threads.net/*",
+        "*://threads.com/*",
+        "*://*.threads.com/*",
+        "*://bsky.app/*",
+        "*://*.bsky.app/*",
+        "*://mastodon.social/*",
+        "*://mastodon.online/*",
+        "*://mstdn.social/*",
+        "*://mas.to/*",
+        "*://mastodon.world/*",
+        "*://reddit.com/*",
+        "*://*.reddit.com/*",
+        "*://linkedin.com/*",
+        "*://*.linkedin.com/*",
+        "*://facebook.com/*",
+        "*://*.facebook.com/*",
+        "*://instagram.com/*",
+        "*://*.instagram.com/*",
+        "*://youtube.com/*",
+        "*://*.youtube.com/*",
+        "*://tiktok.com/*",
+        "*://*.tiktok.com/*",
+        "*://discord.com/*",
+        "*://*.discord.com/*",
+        "*://app.slack.com/*",
+        "*://slack.com/*",
+        "*://*.slack.com/*",
+        "*://web.whatsapp.com/*",
+        "*://messenger.com/*",
+        "*://*.messenger.com/*",
+        "*://web.telegram.org/*",
+        "*://github.com/*",
+        "*://*.github.com/*"
+      ],
+      "js": ["platforms.js", "content.js"],
+      "run_at": "document_idle",
+      "all_frames": true
+    }
+  ]
+}

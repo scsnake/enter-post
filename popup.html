@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header>
+    <div class="brand">enter-post</div>
+    <div id="site-status" class="site-status">…</div>
+  </header>
+
+  <section class="modes">
+    <h2>Send mode</h2>
+    <label class="mode-option">
+      <input type="radio" name="mode" value="ctrl-enter-send">
+      <div>
+        <div class="mode-title">
+          <kbd>Ctrl</kbd>/<kbd>⌘</kbd>+<kbd>Enter</kbd> sends
+        </div>
+        <div class="mode-sub"><kbd>Enter</kbd> inserts newline</div>
+      </div>
+    </label>
+    <label class="mode-option">
+      <input type="radio" name="mode" value="enter-send">
+      <div>
+        <div class="mode-title"><kbd>Enter</kbd> sends</div>
+        <div class="mode-sub"><kbd>Shift</kbd>+<kbd>Enter</kbd> inserts newline</div>
+      </div>
+    </label>
+  </section>
+
+  <section class="hint-toggle">
+    <label>
+      <input type="checkbox" id="show-hint">
+      Show hint bubble on supported sites
+    </label>
+  </section>
+
+  <section class="sites">
+    <h2>Supported sites</h2>
+    <ul id="site-list"></ul>
+  </section>
+
+  <footer>
+    <span class="version">v0.1.0</span>
+  </footer>
+
+  <script src="platforms.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

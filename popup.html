@@ -11,21 +11,33 @@
   </header>
 
   <section class="modes">
-    <h2>Send mode</h2>
+    <h2 data-i18n="popupSendMode">Send mode</h2>
     <label class="mode-option">
       <input type="radio" name="mode" value="ctrl-enter-send">
       <div>
         <div class="mode-title">
-          <kbd>Ctrl</kbd>/<kbd>⌘</kbd>+<kbd>Enter</kbd> sends
+          <span class="mode-keys">
+            <kbd>Ctrl</kbd>/<kbd>⌘</kbd>+<kbd>Enter</kbd>
+          </span>
+          <span data-i18n="popupSuffixSends">sends</span>
         </div>
-        <div class="mode-sub"><kbd>Enter</kbd> inserts newline</div>
+        <div class="mode-sub">
+          <span class="mode-keys"><kbd>Enter</kbd></span>
+          <span data-i18n="popupSuffixNewline">inserts newline</span>
+        </div>
       </div>
     </label>
     <label class="mode-option">
       <input type="radio" name="mode" value="enter-send">
       <div>
-        <div class="mode-title"><kbd>Enter</kbd> sends</div>
-        <div class="mode-sub"><kbd>Shift</kbd>+<kbd>Enter</kbd> inserts newline</div>
+        <div class="mode-title">
+          <span class="mode-keys"><kbd>Enter</kbd></span>
+          <span data-i18n="popupSuffixSends">sends</span>
+        </div>
+        <div class="mode-sub">
+          <span class="mode-keys"><kbd>Shift</kbd>+<kbd>Enter</kbd></span>
+          <span data-i18n="popupSuffixNewline">inserts newline</span>
+        </div>
       </div>
     </label>
   </section>
@@ -33,17 +45,17 @@
   <section class="hint-toggle">
     <label>
       <input type="checkbox" id="show-hint">
-      Show hint bubble on supported sites
+      <span data-i18n="popupShowHint">Show hint bubble on supported sites</span>
     </label>
   </section>
 
   <section class="sites">
-    <h2>Supported sites</h2>
+    <h2 data-i18n="popupSupportedSites">Supported sites</h2>
     <ul id="site-list"></ul>
   </section>
 
   <footer>
-    <span class="version">v0.1.0</span>
+    <span class="version" id="version"></span>
   </footer>
 
   <script src="platforms.js"></script>

@@ -1,12 +1,23 @@
 (function () {
   const EP = self.ENTER_POST;
   const DEFAULTS = { globalMode: 'ctrl-enter-send', siteEnabled: {}, showHint: true };
+  const t = (key, ...subs) => chrome.i18n.getMessage(key, subs.length ? subs : undefined) || key;
 
   const $ = (sel) => document.querySelector(sel);
   const modeInputs = () => document.querySelectorAll('input[name="mode"]');
   const showHintInput = () => $('#show-hint');
   const siteList = () => $('#site-list');
   const siteStatus = () => $('#site-status');
+
+  function applyStaticI18n() {
+    document.documentElement.lang = (chrome.i18n.getUILanguage() || 'en').replace('_', '-');
+    document.querySelectorAll('[data-i18n]').forEach((el) => {
+      const msg = t(el.dataset.i18n);
+      if (msg) el.textContent = msg;
+    });
+    const ver = $('#version');
+    if (ver) ver.textContent = 'v' + chrome.runtime.getManifest().version;
+  }
 
   function load() {
     chrome.storage.sync.get(null, (data) => {
@@ -42,7 +53,7 @@
       name.textContent = p.label;
       const native = document.createElement('span');
       native.className = 'site-native';
-      native.textContent = p.nativeSend === 'Ctrl+Enter' ? '(native: Ctrl+Enter)' : '(native: Enter)';
+      native.textContent = p.nativeSend === 'Ctrl+Enter' ? t('popupNativeCtrlEnter') : t('popupNativeEnter');
       label.appendChild(cb);
       label.appendChild(name);
       label.appendChild(native);
@@ -59,16 +70,16 @@
       try { host = new URL(tab.url).hostname; } catch (_) { host = ''; }
       const p = EP.findPlatform(host);
       if (!p) {
-        el.textContent = 'Not a supported site';
+        el.textContent = t('popupStatusUnsupported');
         el.className = 'site-status site-status--inactive';
         return;
       }
       const enabled = (settings.siteEnabled || {})[p.id] !== false;
       if (!enabled) {
-        el.textContent = `Disabled on ${p.label}`;
+        el.textContent = t('popupStatusDisabled', p.label);
         el.className = 'site-status site-status--off';
       } else {
-        el.textContent = `Active on ${p.label}`;
+        el.textContent = t('popupStatusActive', p.label);
         el.className = 'site-status site-status--on';
       }
       // Highlight matching row.
@@ -78,6 +89,7 @@
   }
 
   document.addEventListener('DOMContentLoaded', () => {
+    applyStaticI18n();
     load();
     modeInputs().forEach((r) => {
       r.addEventListener('change', () => {

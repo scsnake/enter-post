@@ -1,0 +1,60 @@
+{
+  "extName": {
+    "message": "enter-post"
+  },
+  "extDescription": {
+    "message": "統一各大社群與聊天平台（X、Reddit、Discord、Slack、WhatsApp 等）Enter、Ctrl+Enter、Shift+Enter 的送出／換行行為。"
+  },
+
+  "popupSendMode": {
+    "message": "送出模式"
+  },
+  "popupSuffixSends": {
+    "message": "送出"
+  },
+  "popupSuffixNewline": {
+    "message": "換行"
+  },
+  "popupShowHint": {
+    "message": "在支援平台顯示提示氣泡"
+  },
+  "popupSupportedSites": {
+    "message": "支援平台"
+  },
+  "popupStatusActive": {
+    "message": "已於 $SITE$ 啟用",
+    "placeholders": { "site": { "content": "$1", "example": "Discord" } }
+  },
+  "popupStatusDisabled": {
+    "message": "已於 $SITE$ 停用",
+    "placeholders": { "site": { "content": "$1", "example": "Discord" } }
+  },
+  "popupStatusUnsupported": {
+    "message": "非支援平台"
+  },
+  "popupNativeCtrlEnter": {
+    "message": "（原生：Ctrl+Enter）"
+  },
+  "popupNativeEnter": {
+    "message": "（原生：Enter）"
+  },
+
+  "hintLabelSend": {
+    "message": "送出"
+  },
+  "hintLabelNewline": {
+    "message": "換行"
+  },
+  "hintNoteDisabled": {
+    "message": "此站已停用 — 顯示原生行為"
+  },
+  "hintNoteError": {
+    "message": "覆寫失敗 — 已回落至原生行為"
+  },
+  "hintNoteNative": {
+    "message": "已是原生行為 — 無需覆寫"
+  },
+  "hintDismiss": {
+    "message": "關閉"
+  }
+}

@@ -279,6 +279,8 @@
     return { Enter: 'Enter', Shift: 'Shift', Ctrl: cmd };
   })();
 
+  const t = (key) => (chrome.i18n && chrome.i18n.getMessage(key)) || key;
+
   function combosForMode(mode) {
     if (mode === 'enter-send') {
       return { send: ['Enter'], newline: ['Shift', 'Enter'] };
@@ -331,20 +333,24 @@
         <span class="enterpost-hint__brand">enter-post</span>
         <span class="enterpost-hint__sep">·</span>
         <span class="enterpost-hint__platform"></span>
-        <button class="enterpost-hint__close" aria-label="Dismiss">×</button>
+        <button class="enterpost-hint__close" type="button">×</button>
       </div>
       <div class="enterpost-hint__row">
-        <span class="enterpost-hint__label">Send</span>
+        <span class="enterpost-hint__label" data-slot="label-send"></span>
         <span class="enterpost-hint__combo" data-slot="send"></span>
       </div>
       <div class="enterpost-hint__row">
-        <span class="enterpost-hint__label">Newline</span>
+        <span class="enterpost-hint__label" data-slot="label-newline"></span>
         <span class="enterpost-hint__combo" data-slot="newline"></span>
       </div>
       <div class="enterpost-hint__note" data-slot="note"></div>
     `;
     (document.body || document.documentElement).appendChild(hintEl);
-    hintEl.querySelector('.enterpost-hint__close').addEventListener('click', hideHint);
+    hintEl.querySelector('[data-slot="label-send"]').textContent = t('hintLabelSend');
+    hintEl.querySelector('[data-slot="label-newline"]').textContent = t('hintLabelNewline');
+    const closeBtn = hintEl.querySelector('.enterpost-hint__close');
+    closeBtn.setAttribute('aria-label', t('hintDismiss'));
+    closeBtn.addEventListener('click', hideHint);
     hintEl.addEventListener('mouseenter', clearHintTimer);
     hintEl.addEventListener('mouseleave', () => scheduleHintHide(1500));
   }
@@ -376,13 +382,13 @@
     renderCombo(hintEl.querySelector('[data-slot="newline"]'), effective.newline, newlineChanged);
     const note = hintEl.querySelector('[data-slot="note"]');
     if (!state.enabled) {
-      note.textContent = 'disabled on this site — showing native behavior';
+      note.textContent = t('hintNoteDisabled');
       note.className = 'enterpost-hint__note enterpost-hint__note--muted';
     } else if (state.lastError) {
-      note.textContent = 'override attempt errored — falling back to native';
+      note.textContent = t('hintNoteError');
       note.className = 'enterpost-hint__note enterpost-hint__note--warn';
     } else if (!sendChanged && !newlineChanged) {
-      note.textContent = 'already native — no remapping needed';
+      note.textContent = t('hintNoteNative');
       note.className = 'enterpost-hint__note enterpost-hint__note--muted';
     } else {
       note.textContent = '';

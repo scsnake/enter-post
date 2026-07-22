@@ -26,7 +26,18 @@
 
 ## 支援平台
 
-X / Twitter · Threads · Bluesky · Mastodon（含常見 instance） · Reddit · LinkedIn · Facebook · Instagram · YouTube 留言 · TikTok · Discord · Slack · WhatsApp Web · Messenger · Telegram Web · GitHub
+**全球**: X / Twitter · Threads · Bluesky · Reddit · LinkedIn · Facebook · Instagram · YouTube 留言 · TikTok · Discord · Slack · WhatsApp Web · Messenger · Telegram Web · GitHub · Mastodon（含 mastodon.social、mas.to、mastodon.world 等）
+
+**日本常用**: LINE（含 chat.line.biz） · Niconico · note · Qiita · Zenn · Chatwork · Mastodon JP（mstdn.jp、pawoo.net）
+
+## 語言（i18n）
+
+擴充功能會依 Chrome 介面語言自動切換 UI 顯示語言。目前支援:
+
+- English（預設）
+- 繁體中文（zh_TW）
+
+其他語言可透過在 `_locales/` 目錄新增對應資料夾（如 `zh_CN/`、`ja/`）擴充。
 
 擴充功能作用時，網頁右下角會出現小型提示氣泡:
 

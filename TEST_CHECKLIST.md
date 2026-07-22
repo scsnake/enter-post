@@ -150,6 +150,32 @@
 
 ---
 
+## 8. 日本平台首次驗證（v0.2.0 新增）
+
+由於這些平台的 composer / 送出按鈕 selector 是根據常見模式推測，實際載入後可能需微調:
+
+- [ ] **LINE**（`web.line.me` 或 `chat.line.biz`）: Enter → 換行、Ctrl+Enter → 送出。
+- [ ] **Niconico**（`nicovideo.jp` 影片留言、`live.nicovideo.jp` 直播留言）: Enter → 換行、Ctrl+Enter → 送出。
+- [ ] **note**（`note.com` 留言）: Enter → 換行、Ctrl+Enter → 送出。
+- [ ] **Qiita**（`qiita.com` 文章留言）: Enter → 換行、Ctrl+Enter → 送出。
+- [ ] **Zenn**（`zenn.dev` 文章留言）: Enter → 換行、Ctrl+Enter → 送出。
+- [ ] **Chatwork**（`chatwork.com` 訊息輸入）: Enter → 換行、Ctrl+Enter → 送出。
+- [ ] **Mastodon JP**（`mstdn.jp` 或 `pawoo.net`）: 與其他 Mastodon 一致，Enter → 換行、Ctrl+Enter → 送出。
+
+若某平台失效，DevTools Console 檢查是否有 selector 匹配警告，並更新 `platforms.js` 對應項目的 `composerSelector` / `sendButtonSelector`。
+
+---
+
+## 9. i18n 語言切換驗證（v0.2.0 新增）
+
+- [ ] Chrome 語言設為英文 → 點擴充功能圖示，popup 顯示英文（Send mode / Show hint bubble / Supported sites / Active on ...）。
+- [ ] 支援平台上進入 composer → 提示氣泡顯示英文（Send / Newline）。
+- [ ] Chrome 語言切為繁體中文（`chrome://settings/languages` → 將繁體中文移到最上並勾選「以此語言顯示 Google Chrome」，重啟 Chrome）→ popup 顯示繁中（送出模式 / 在支援平台顯示提示氣泡 / 支援平台 / 已於 ... 啟用）。
+- [ ] 提示氣泡顯示繁中（送出 / 換行）。
+- [ ] Chrome Web Store（若有上架）在繁中介面下顯示繁中的擴充功能描述。
+
+---
+
 ## 回報格式（若發現問題）
 
 ```

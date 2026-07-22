@@ -1,0 +1,78 @@
+{
+  "extName": {
+    "message": "enter-post",
+    "description": "Extension name. Keep as-is across locales."
+  },
+  "extDescription": {
+    "message": "Unify Enter, Ctrl+Enter, and Shift+Enter behavior across social and chat sites (X, Reddit, Discord, Slack, WhatsApp, and more).",
+    "description": "Store listing description."
+  },
+
+  "popupSendMode": {
+    "message": "Send mode",
+    "description": "Popup section heading above the two mode radio buttons."
+  },
+  "popupSuffixSends": {
+    "message": "sends",
+    "description": "Suffix after a key-combo chip: [Ctrl][+][Enter] sends"
+  },
+  "popupSuffixNewline": {
+    "message": "inserts newline",
+    "description": "Suffix after a key-combo chip: [Enter] inserts newline"
+  },
+  "popupShowHint": {
+    "message": "Show hint bubble on supported sites",
+    "description": "Popup checkbox label."
+  },
+  "popupSupportedSites": {
+    "message": "Supported sites",
+    "description": "Popup section heading above the per-site enable list."
+  },
+  "popupStatusActive": {
+    "message": "Active on $SITE$",
+    "description": "Popup header when current tab is a supported and enabled site.",
+    "placeholders": { "site": { "content": "$1", "example": "Discord" } }
+  },
+  "popupStatusDisabled": {
+    "message": "Disabled on $SITE$",
+    "description": "Popup header when current tab is supported but user has switched it off.",
+    "placeholders": { "site": { "content": "$1", "example": "Discord" } }
+  },
+  "popupStatusUnsupported": {
+    "message": "Not a supported site",
+    "description": "Popup header when current tab is not in the platform list."
+  },
+  "popupNativeCtrlEnter": {
+    "message": "(native: Ctrl+Enter)",
+    "description": "Small hint next to a site name in the list, showing what the site does by default."
+  },
+  "popupNativeEnter": {
+    "message": "(native: Enter)",
+    "description": "Small hint next to a site name in the list, showing what the site does by default."
+  },
+
+  "hintLabelSend": {
+    "message": "Send",
+    "description": "Row label in the on-page hint bubble."
+  },
+  "hintLabelNewline": {
+    "message": "Newline",
+    "description": "Row label in the on-page hint bubble."
+  },
+  "hintNoteDisabled": {
+    "message": "disabled on this site — showing native behavior",
+    "description": "Hint footer note shown when the site is toggled off."
+  },
+  "hintNoteError": {
+    "message": "override attempt errored — falling back to native",
+    "description": "Hint footer note shown when a send-button click or key-event synthesis failed."
+  },
+  "hintNoteNative": {
+    "message": "already native — no remapping needed",
+    "description": "Hint footer note shown when the chosen mode matches the site's native behavior."
+  },
+  "hintDismiss": {
+    "message": "Dismiss",
+    "description": "Accessible label for the hint bubble's close (×) button."
+  }
+}

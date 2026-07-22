@@ -1,9 +1,12 @@
 {
   "manifest_version": 3,
-  "name": "enter-post",
-  "version": "0.1.0",
-  "description": "Unify Enter / Ctrl+Enter / Shift+Enter behavior across social + chat sites (X, Reddit, Discord, Slack, WhatsApp, and more).",
-  "permissions": ["storage"],
+  "name": "__MSG_extName__",
+  "version": "0.2.0",
+  "description": "__MSG_extDescription__",
+  "default_locale": "en",
+  "permissions": [
+    "storage"
+  ],
   "host_permissions": [
     "*://x.com/*",
     "*://*.x.com/*",
@@ -16,10 +19,19 @@
     "*://bsky.app/*",
     "*://*.bsky.app/*",
     "*://mastodon.social/*",
+    "*://*.mastodon.social/*",
     "*://mastodon.online/*",
+    "*://*.mastodon.online/*",
     "*://mstdn.social/*",
+    "*://*.mstdn.social/*",
     "*://mas.to/*",
+    "*://*.mas.to/*",
     "*://mastodon.world/*",
+    "*://*.mastodon.world/*",
+    "*://mstdn.jp/*",
+    "*://*.mstdn.jp/*",
+    "*://pawoo.net/*",
+    "*://*.pawoo.net/*",
     "*://reddit.com/*",
     "*://*.reddit.com/*",
     "*://linkedin.com/*",
@@ -34,7 +46,6 @@
     "*://*.tiktok.com/*",
     "*://discord.com/*",
     "*://*.discord.com/*",
-    "*://app.slack.com/*",
     "*://slack.com/*",
     "*://*.slack.com/*",
     "*://web.whatsapp.com/*",
@@ -42,7 +53,20 @@
     "*://*.messenger.com/*",
     "*://web.telegram.org/*",
     "*://github.com/*",
-    "*://*.github.com/*"
+    "*://*.github.com/*",
+    "*://line.me/*",
+    "*://*.line.me/*",
+    "*://chat.line.biz/*",
+    "*://nicovideo.jp/*",
+    "*://*.nicovideo.jp/*",
+    "*://note.com/*",
+    "*://*.note.com/*",
+    "*://qiita.com/*",
+    "*://*.qiita.com/*",
+    "*://zenn.dev/*",
+    "*://*.zenn.dev/*",
+    "*://chatwork.com/*",
+    "*://*.chatwork.com/*"
   ],
   "action": {
     "default_popup": "popup.html",
@@ -59,8 +83,12 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["hint.css"],
-      "matches": ["<all_urls>"]
+      "resources": [
+        "hint.css"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
     }
   ],
   "content_scripts": [
@@ -77,10 +105,19 @@
         "*://bsky.app/*",
         "*://*.bsky.app/*",
         "*://mastodon.social/*",
+        "*://*.mastodon.social/*",
         "*://mastodon.online/*",
+        "*://*.mastodon.online/*",
         "*://mstdn.social/*",
+        "*://*.mstdn.social/*",
         "*://mas.to/*",
+        "*://*.mas.to/*",
         "*://mastodon.world/*",
+        "*://*.mastodon.world/*",
+        "*://mstdn.jp/*",
+        "*://*.mstdn.jp/*",
+        "*://pawoo.net/*",
+        "*://*.pawoo.net/*",
         "*://reddit.com/*",
         "*://*.reddit.com/*",
         "*://linkedin.com/*",
@@ -95,7 +132,6 @@
         "*://*.tiktok.com/*",
         "*://discord.com/*",
         "*://*.discord.com/*",
-        "*://app.slack.com/*",
         "*://slack.com/*",
         "*://*.slack.com/*",
         "*://web.whatsapp.com/*",
@@ -103,9 +139,25 @@
         "*://*.messenger.com/*",
         "*://web.telegram.org/*",
         "*://github.com/*",
-        "*://*.github.com/*"
+        "*://*.github.com/*",
+        "*://line.me/*",
+        "*://*.line.me/*",
+        "*://chat.line.biz/*",
+        "*://nicovideo.jp/*",
+        "*://*.nicovideo.jp/*",
+        "*://note.com/*",
+        "*://*.note.com/*",
+        "*://qiita.com/*",
+        "*://*.qiita.com/*",
+        "*://zenn.dev/*",
+        "*://*.zenn.dev/*",
+        "*://chatwork.com/*",
+        "*://*.chatwork.com/*"
       ],
-      "js": ["platforms.js", "content.js"],
+      "js": [
+        "platforms.js",
+        "content.js"
+      ],
       "run_at": "document_idle",
       "all_frames": true
     }

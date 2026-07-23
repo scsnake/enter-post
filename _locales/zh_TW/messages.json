@@ -3,7 +3,7 @@
     "message": "enter-post"
   },
   "extDescription": {
-    "message": "統一各大社群與聊天平台（X、Reddit、Discord、Slack、WhatsApp 等）Enter、Ctrl+Enter、Shift+Enter 的送出／換行行為。"
+    "message": "統一各大網頁社群貼文與即時通訊介面的 Enter、Ctrl+Enter 與 Shift+Enter 送出與換行行為。"
   },
 
   "popupSendMode": {

@@ -4,7 +4,7 @@
     "description": "Extension name. Keep as-is across locales."
   },
   "extDescription": {
-    "message": "Unify Enter, Ctrl+Enter, and Shift+Enter behavior across social and chat sites (X, Reddit, Discord, Slack, WhatsApp, and more).",
+    "message": "Unify Enter, Ctrl+Enter, and Shift+Enter hotkey behavior for sending posts and inserting line breaks across web platforms.",
     "description": "Store listing description."
   },
 

@@ -117,18 +117,23 @@
     const wantsNewline = isNewlineCombo(e);
     if (!wantsSend && !wantsNewline) return;
 
-    const nativeSend = nativeWouldSend(e);
-    // If the user's intent already matches the site's native behavior for this
-    // exact combo, let the site handle it — safer than re-implementing.
-    if (wantsSend && nativeSend) return;
-    if (wantsNewline && !nativeSend) return;
-
-    e.preventDefault();
-    e.stopImmediatePropagation();
-
     if (wantsNewline) {
+      // Always intercept newline intents. Different composers on the same
+      // platform can have different native behaviors (e.g. Threads' reply
+      // input under a post sends on plain Enter, while the top-level
+      // composer inserts a newline). Intercepting unconditionally is the
+      // only safe way to prevent accidental sends across every composer
+      // variant a site may ship.
+      e.preventDefault();
+      e.stopImmediatePropagation();
       insertNewline(composer);
     } else {
+      // Send intent. If the site's native combo matches, let its own send
+      // flow run — it handles validation / attachments / etc. better than
+      // our synthesized click or keypress can. Otherwise intercept.
+      if (nativeWouldSend(e)) return;
+      e.preventDefault();
+      e.stopImmediatePropagation();
       state.lastError = null;
       try {
         triggerSend(composer);

@@ -59,6 +59,14 @@
 - [ ] 在 **留言框** 同樣測試，行為要一致（`Enter` = 換行，`Ctrl+Enter` = 送出）。
 - [ ] 兩者的提示氣泡都應顯示「Send: `Ctrl+Enter`（高亮）· Newline: `Enter`」。
 
+### 1-4. Threads 混合行為驗證（v0.2.1 迴歸重點）
+
+Threads 的主要貼文 composer 是 `Enter` 換行、`Ctrl+Enter` 送出；但**別人貼文底下的回覆欄**（reply input）native 是 `Enter` 直接送出。0.2.1 前這個情境會意外送出回覆。
+
+- [ ] 前往任意他人貼文（例如打開 https://www.threads.com/@lixxliz/post/DbF9rtaEsS2 或任一貼文詳細頁），點入 `Reply to ...` 輸入框。
+- [ ] 輸入文字後按 `Enter` → **必須換行，不可送出回覆**。
+- [ ] 按 `Ctrl+Enter` → 送出回覆。
+
 ---
 
 ## 2. 切換模式（Enter 送出、Shift+Enter 換行）

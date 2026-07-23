@@ -67,6 +67,18 @@ Threads 的主要貼文 composer 是 `Enter` 換行、`Ctrl+Enter` 送出；但*
 - [ ] 輸入文字後按 `Enter` → **必須換行，不可送出回覆**。
 - [ ] 按 `Ctrl+Enter` → 送出回覆。
 
+### 1-5. 各平台「回覆別人留言」的輸入框驗證（v0.2.2 新增涵蓋）
+
+除了 Threads 的貼文回覆之外，以下平台的「回覆某留言」輸入框過去可能沒被 selector 涵蓋而未受管理:
+
+- [ ] **Instagram**: 開任一貼文的留言區，點某留言旁的「Reply」→ 出現 `Reply to @user...` 輸入框 → 按 `Enter` 應換行、`Ctrl+Enter` 應送出。
+- [ ] **Facebook**: 開任一貼文的留言區，點某留言旁的「回覆」→ 出現 `Write a reply...` 輸入框 → `Enter` 應換行、`Ctrl+Enter` 應送出。
+- [ ] **TikTok**: 開任一影片的留言，點某留言旁的「Reply」→ 出現回覆輸入框 → `Enter` 應換行、`Ctrl+Enter` 應送出。
+- [ ] **YouTube**: 開任一影片留言區，點某留言的「Reply」→ 出現回覆輸入框（`#contenteditable-root` 在另一個 `ytd-commentbox` 內）→ `Enter` 應換行、`Ctrl+Enter` 應送出。
+- [ ] **Reddit**: 對某留言點「Reply」→ 展開新的內嵌 composer → `Enter` 應換行、`Ctrl+Enter` 應送出。
+
+若任一項失效，Console 檢查 focused element 的 `outerHTML`，將該元素獨特的 selector（如 `data-testid`、`aria-label`、class）加入 `platforms.js` 對應平台的 `composerSelector`。
+
 ---
 
 ## 2. 切換模式（Enter 送出、Shift+Enter 換行）

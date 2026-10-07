@@ -8,9 +8,13 @@
     "description": "Store listing description."
   },
 
-  "popupSendMode": {
-    "message": "Send mode",
-    "description": "Popup section heading above the two mode radio buttons."
+  "popupPostSendMode": {
+    "message": "Post / Feed Send Mode",
+    "description": "Popup section heading for post platforms."
+  },
+  "popupChatSendMode": {
+    "message": "Chat / Messenger Send Mode",
+    "description": "Popup section heading for chat platforms."
   },
   "popupSuffixSends": {
     "message": "sends",

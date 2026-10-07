@@ -29,15 +29,17 @@
   const PLATFORMS = [
     {
       id: 'x',
+      type: 'post',
       label: 'X / Twitter',
       hosts: ['x.com', 'twitter.com', 'mobile.twitter.com'],
       nativeSend: 'Ctrl+Enter',
-      composerSelector: '[data-testid^="tweetTextarea"], [data-testid="dmComposerTextInput"]',
+      composerSelector: '[data-testid^="tweetTextarea"], [data-testid="dmComposerTextInput"], textarea[data-testid="dm-composer-textarea"]',
       sendButtonSelector: '[data-testid="tweetButton"], [data-testid="tweetButtonInline"], [data-testid="dmComposerSendButton"]',
       insertNewline: 'contenteditable',
     },
     {
       id: 'threads',
+      type: 'post',
       label: 'Threads',
       hosts: ['threads.net', 'threads.com'],
       nativeSend: 'Ctrl+Enter',
@@ -47,6 +49,7 @@
     },
     {
       id: 'bluesky',
+      type: 'post',
       label: 'Bluesky',
       hosts: ['bsky.app'],
       nativeSend: 'Ctrl+Enter',
@@ -56,6 +59,7 @@
     },
     {
       id: 'mastodon',
+      type: 'post',
       label: 'Mastodon',
       hosts: ['mastodon.social', 'mastodon.online', 'mstdn.social', 'mas.to', 'mastodon.world', 'mstdn.jp', 'pawoo.net'],
       nativeSend: 'Ctrl+Enter',
@@ -65,6 +69,7 @@
     },
     {
       id: 'reddit',
+      type: 'post',
       label: 'Reddit',
       hosts: ['reddit.com', 'www.reddit.com', 'new.reddit.com', 'old.reddit.com'],
       nativeSend: 'Ctrl+Enter',
@@ -74,6 +79,7 @@
     },
     {
       id: 'linkedin',
+      type: 'post',
       label: 'LinkedIn',
       hosts: ['linkedin.com', 'www.linkedin.com'],
       nativeSend: 'Ctrl+Enter',
@@ -83,15 +89,17 @@
     },
     {
       id: 'facebook',
+      type: 'post',
       label: 'Facebook',
       hosts: ['facebook.com', 'www.facebook.com', 'm.facebook.com'],
       nativeSend: 'Enter',
       composerSelector: '[role="textbox"][contenteditable="true"], [aria-label*="comment" i][contenteditable="true"], [aria-label*="reply" i][contenteditable="true"]',
-      sendButtonSelector: '[aria-label="Post"], [aria-label="Comment"], [aria-label="Reply"]',
+      sendButtonSelector: '[aria-label="Post"], [aria-label="Comment"], [aria-label="Reply"], [aria-label="發佈"], [aria-label="貼文留言"], [aria-label="回覆"]',
       insertNewline: 'contenteditable',
     },
     {
       id: 'instagram',
+      type: 'post',
       label: 'Instagram',
       hosts: ['instagram.com', 'www.instagram.com'],
       nativeSend: 'Enter',
@@ -101,6 +109,7 @@
     },
     {
       id: 'youtube',
+      type: 'post',
       label: 'YouTube',
       hosts: ['youtube.com', 'www.youtube.com', 'm.youtube.com'],
       nativeSend: 'Ctrl+Enter',
@@ -110,6 +119,7 @@
     },
     {
       id: 'tiktok',
+      type: 'post',
       label: 'TikTok',
       hosts: ['tiktok.com', 'www.tiktok.com'],
       nativeSend: 'Enter',
@@ -119,6 +129,7 @@
     },
     {
       id: 'discord',
+      type: 'chat',
       label: 'Discord',
       hosts: ['discord.com'],
       nativeSend: 'Enter',
@@ -128,6 +139,7 @@
     },
     {
       id: 'slack',
+      type: 'chat',
       label: 'Slack',
       hosts: ['app.slack.com', 'slack.com'],
       nativeSend: 'Enter',
@@ -137,6 +149,7 @@
     },
     {
       id: 'whatsapp',
+      type: 'chat',
       label: 'WhatsApp',
       hosts: ['web.whatsapp.com'],
       nativeSend: 'Enter',
@@ -146,6 +159,7 @@
     },
     {
       id: 'messenger',
+      type: 'chat',
       label: 'Messenger',
       hosts: ['messenger.com', 'www.messenger.com'],
       nativeSend: 'Enter',
@@ -155,6 +169,7 @@
     },
     {
       id: 'telegram',
+      type: 'chat',
       label: 'Telegram',
       hosts: ['web.telegram.org'],
       nativeSend: 'Enter',
@@ -164,6 +179,7 @@
     },
     {
       id: 'github',
+      type: 'post',
       label: 'GitHub',
       hosts: ['github.com'],
       nativeSend: 'Ctrl+Enter',
@@ -173,6 +189,7 @@
     },
     {
       id: 'line',
+      type: 'chat',
       label: 'LINE',
       hosts: ['line.me', 'web.line.me', 'chat.line.biz'],
       nativeSend: 'Enter',
@@ -182,6 +199,7 @@
     },
     {
       id: 'niconico',
+      type: 'post',
       label: 'Niconico',
       hosts: ['nicovideo.jp', 'www.nicovideo.jp', 'live.nicovideo.jp', 'live2.nicovideo.jp'],
       nativeSend: 'Enter',
@@ -191,6 +209,7 @@
     },
     {
       id: 'note',
+      type: 'post',
       label: 'note',
       hosts: ['note.com'],
       nativeSend: 'Ctrl+Enter',
@@ -200,6 +219,7 @@
     },
     {
       id: 'qiita',
+      type: 'post',
       label: 'Qiita',
       hosts: ['qiita.com'],
       nativeSend: 'Ctrl+Enter',
@@ -209,6 +229,7 @@
     },
     {
       id: 'zenn',
+      type: 'post',
       label: 'Zenn',
       hosts: ['zenn.dev'],
       nativeSend: 'Ctrl+Enter',
@@ -218,6 +239,7 @@
     },
     {
       id: 'chatwork',
+      type: 'chat',
       label: 'Chatwork',
       hosts: ['chatwork.com', 'www.chatwork.com'],
       nativeSend: 'Enter',

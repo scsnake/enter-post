@@ -1,10 +1,11 @@
 (function () {
   const EP = self.ENTER_POST;
-  const DEFAULTS = { globalMode: 'ctrl-enter-send', siteEnabled: {}, showHint: true };
+  const DEFAULTS = { postMode: 'ctrl-enter-send', chatMode: 'enter-send', siteEnabled: {}, showHint: true };
   const t = (key, ...subs) => chrome.i18n.getMessage(key, subs.length ? subs : undefined) || key;
 
   const $ = (sel) => document.querySelector(sel);
-  const modeInputs = () => document.querySelectorAll('input[name="mode"]');
+  const postModeInputs = () => document.querySelectorAll('input[name="post-mode"]');
+  const chatModeInputs = () => document.querySelectorAll('input[name="chat-mode"]');
   const showHintInput = () => $('#show-hint');
   const siteList = () => $('#site-list');
   const siteStatus = () => $('#site-status');
@@ -22,8 +23,11 @@
   function load() {
     chrome.storage.sync.get(null, (data) => {
       const settings = { ...DEFAULTS, ...(data || {}) };
-      const mode = settings.globalMode === 'enter-send' ? 'enter-send' : 'ctrl-enter-send';
-      modeInputs().forEach((r) => { r.checked = r.value === mode; });
+      const postMode = settings.postMode === 'enter-send' ? 'enter-send' : 'ctrl-enter-send';
+      postModeInputs().forEach((r) => { r.checked = r.value === postMode; });
+
+      const chatMode = settings.chatMode === 'ctrl-enter-send' ? 'ctrl-enter-send' : 'enter-send';
+      chatModeInputs().forEach((r) => { r.checked = r.value === chatMode; });
       showHintInput().checked = settings.showHint !== false;
       renderSites(settings.siteEnabled || {});
       updateSiteStatus(settings);
@@ -91,9 +95,14 @@
   document.addEventListener('DOMContentLoaded', () => {
     applyStaticI18n();
     load();
-    modeInputs().forEach((r) => {
+    postModeInputs().forEach((r) => {
       r.addEventListener('change', () => {
-        if (r.checked) chrome.storage.sync.set({ globalMode: r.value });
+        if (r.checked) chrome.storage.sync.set({ postMode: r.value });
+      });
+    });
+    chatModeInputs().forEach((r) => {
+      r.addEventListener('change', () => {
+        if (r.checked) chrome.storage.sync.set({ chatMode: r.value });
       });
     });
     showHintInput().addEventListener('change', () => {

@@ -31,7 +31,7 @@
 .enterpost-hint.enterpost-hint--visible {
   opacity: 1;
   transform: translateY(0);
-  pointer-events: auto;
+  pointer-events: none;
   visibility: visible;
 }
 
@@ -82,6 +82,7 @@
   line-height: 1;
   padding: 0 4px;
   border-radius: 4px;
+  pointer-events: auto;
 }
 .enterpost-hint__close:hover {
   color: #f8fafc;

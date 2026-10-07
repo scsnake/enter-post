@@ -14,13 +14,15 @@
 
   const IS_MAC = /Mac|iPhone|iPad|iPod/.test(navigator.platform || navigator.userAgent);
   const DEFAULTS = {
-    globalMode: 'ctrl-enter-send',
+    postMode: 'ctrl-enter-send',
+    chatMode: 'enter-send',
     siteEnabled: {},
     showHint: true,
   };
 
   const state = {
-    mode: DEFAULTS.globalMode,
+    postMode: DEFAULTS.postMode,
+    chatMode: DEFAULTS.chatMode,
     enabled: true,
     showHint: true,
     lastError: null,
@@ -32,6 +34,7 @@
     applySettings(data || {});
     installKeyListener();
     installFocusWatcher();
+    installInputWatcher();
   });
 
   chrome.storage.onChanged.addListener((changes, area) => {
@@ -44,20 +47,22 @@
     } else if (currentComposer && document.activeElement && findComposer(document.activeElement)) {
       // Composer still focused; refresh content + reposition.
       updateHintContent();
-      showHint(4000);
+      showHint(2000);
     }
   });
 
   function currentSettings() {
     return {
-      globalMode: state.mode,
+      postMode: state.postMode,
+      chatMode: state.chatMode,
       siteEnabled: { [platform.id]: state.enabled },
       showHint: state.showHint,
     };
   }
 
   function applySettings(data) {
-    state.mode = data.globalMode === 'enter-send' ? 'enter-send' : 'ctrl-enter-send';
+    state.postMode = data.postMode === 'enter-send' ? 'enter-send' : 'ctrl-enter-send';
+    state.chatMode = data.chatMode === 'ctrl-enter-send' ? 'ctrl-enter-send' : 'enter-send';
     state.showHint = data.showHint !== false;
     const siteEnabled = data.siteEnabled || {};
     state.enabled = siteEnabled[platform.id] !== false;
@@ -65,11 +70,39 @@
 
   // ---- Key handling --------------------------------------------------------
 
+  function getActiveMode(target) {
+    if (platform.id === 'facebook' && target) {
+      const placeholder = target.placeholder || target.getAttribute('placeholder') || target.getAttribute('aria-placeholder') || '';
+      if (placeholder === 'Aa') {
+        return state.chatMode;
+      }
+    }
+    if (platform.id === 'instagram' && target) {
+      const placeholder = target.placeholder || target.getAttribute('placeholder') || target.getAttribute('aria-placeholder') || '';
+      if (placeholder.includes('Message') || placeholder.includes('訊息') || placeholder.includes('消息')) {
+        return state.chatMode;
+      }
+    }
+    if (platform.id === 'threads' && target) {
+      const placeholder = target.placeholder || target.getAttribute('placeholder') || target.getAttribute('aria-placeholder') || '';
+      if (placeholder.includes('Message') || placeholder.includes('訊息') || placeholder.includes('消息')) {
+        return state.chatMode;
+      }
+    }
+    if (platform.id === 'x' && target) {
+      if (target.tagName === 'TEXTAREA' && (target.getAttribute('data-testid') === 'dm-composer-textarea' || target.placeholder === 'Message')) {
+        return state.chatMode;
+      }
+    }
+    return platform.type === 'chat' ? state.chatMode : state.postMode;
+  }
+
   function isSendCombo(e) {
     if (e.key !== 'Enter') return false;
     if (e.altKey) return false;
     const ctrlish = IS_MAC ? e.metaKey : e.ctrlKey;
-    if (state.mode === 'ctrl-enter-send') {
+    const mode = getActiveMode(e.target);
+    if (mode === 'ctrl-enter-send') {
       return ctrlish && !e.shiftKey;
     }
     // enter-send: plain Enter, OR Ctrl/Cmd+Enter (permissive)
@@ -80,7 +113,8 @@
     if (e.key !== 'Enter') return false;
     if (e.altKey) return false;
     const ctrlish = IS_MAC ? e.metaKey : e.ctrlKey;
-    if (state.mode === 'ctrl-enter-send') {
+    const mode = getActiveMode(e.target);
+    if (mode === 'ctrl-enter-send') {
       // Plain Enter = newline; Shift+Enter = newline (permissive).
       return !ctrlish;
     }
@@ -108,6 +142,18 @@
 
   function onKeydown(e) {
     if (!state.enabled) return;
+
+    // Immediately dismiss hint on any user keystroke inside composer
+    if (hintEl && hintEl.classList.contains('enterpost-hint--visible')) {
+      if (e.key === 'Escape') {
+        hideHint();
+        return;
+      }
+      if (!['Shift', 'Control', 'Alt', 'Meta', 'CapsLock', 'Tab'].includes(e.key)) {
+        hideHint();
+      }
+    }
+
     if (e.key !== 'Enter') return;
     if (e.isComposing || e.keyCode === 229) return; // CJK IME
     const composer = findComposer(e.target);
@@ -141,13 +187,13 @@
         state.lastError = (err && err.message) || String(err);
       }
     }
-    // Re-show hint briefly on any Enter combo we handled so the user
-    // sees feedback about what the extension just did.
-    if (state.showHint) {
+    // Re-show hint briefly ONLY on dispatch error so the user sees what failed.
+    // Never re-show on normal typing or normal line breaks.
+    if (state.showHint && state.lastError) {
       currentComposer = composer;
       ensureHintReady();
       updateHintContent();
-      showHint(2500);
+      showHint(3000);
     }
   }
 
@@ -378,7 +424,8 @@
 
   function updateHintContent() {
     if (!hintEl) return;
-    const effective = state.enabled ? combosForMode(state.mode) : nativeCombos();
+    const mode = getActiveMode(currentComposer);
+    const effective = state.enabled ? combosForMode(mode) : nativeCombos();
     const native = nativeCombos();
     const sendChanged = state.enabled && !combosEqual(effective.send, native.send);
     const newlineChanged = state.enabled && !combosEqual(effective.newline, native.newline);
@@ -425,25 +472,73 @@
     const vpW = window.innerWidth;
     const vpH = window.innerHeight;
 
-    // Prefer above the anchor; fall back to below.
-    let top = ar.top - hr.height - margin;
-    let placement = 'above';
-    if (top < margin) {
-      const belowTop = ar.bottom + margin;
-      if (belowTop + hr.height <= vpH - margin) {
-        top = belowTop;
-        placement = 'below';
-      } else {
-        // Neither fits fully; clamp to whichever gives more room.
-        top = Math.max(margin, Math.min(top, vpH - hr.height - margin));
-      }
+    const cr = currentComposer ? currentComposer.getBoundingClientRect() : ar;
+
+    function overlapsComposer(rectTop, rectLeft) {
+      if (!currentComposer) return false;
+      return !(
+        rectLeft + hr.width <= cr.left ||
+        rectLeft >= cr.right ||
+        rectTop + hr.height <= cr.top ||
+        rectTop >= cr.bottom
+      );
     }
 
     // Right-align with anchor, clamp inside viewport.
     let left = ar.right - hr.width;
-    if (left < margin) left = ar.left; // shift under-left edge if right-align pushes offscreen
+    if (left < margin) left = ar.left;
     if (left + hr.width > vpW - margin) left = vpW - hr.width - margin;
     if (left < margin) left = margin;
+
+    let top = 0;
+    let placement = 'above';
+
+    if (anchor !== currentComposer) {
+      // Anchor is send button.
+      // 1. Prefer below the send button (outside composer text area).
+      const belowBtnTop = ar.bottom + margin;
+      if (belowBtnTop + hr.height <= vpH - margin && !overlapsComposer(belowBtnTop, left)) {
+        top = belowBtnTop;
+        placement = 'below';
+      }
+      // 2. Try above the entire composer so it does not cover text.
+      else if (cr.top - hr.height - margin >= margin) {
+        top = cr.top - hr.height - margin;
+        placement = 'above';
+      }
+      // 3. Try above the send button ONLY if it does not overlap composer.
+      else if (ar.top - hr.height - margin >= margin && !overlapsComposer(ar.top - hr.height - margin, left)) {
+        top = ar.top - hr.height - margin;
+        placement = 'above';
+      }
+      // 4. Try below the composer.
+      else if (cr.bottom + margin + hr.height <= vpH - margin) {
+        top = cr.bottom + margin;
+        placement = 'below';
+      }
+      // 5. Fallback clamped outside composer where possible.
+      else {
+        top = ar.bottom + margin <= vpH - hr.height - margin ? ar.bottom + margin : Math.max(margin, cr.top - hr.height - margin);
+        placement = top >= ar.bottom ? 'below' : 'above';
+      }
+    } else {
+      // Anchor is composer itself.
+      // 1. Prefer above the composer text area.
+      if (cr.top - hr.height - margin >= margin) {
+        top = cr.top - hr.height - margin;
+        placement = 'above';
+      }
+      // 2. Try below the composer.
+      else if (cr.bottom + margin + hr.height <= vpH - margin) {
+        top = cr.bottom + margin;
+        placement = 'below';
+      }
+      // 3. Fallback: clamp to top margin.
+      else {
+        top = margin;
+        placement = 'below';
+      }
+    }
 
     hintEl.style.top = `${Math.round(top)}px`;
     hintEl.style.left = `${Math.round(left)}px`;
@@ -488,7 +583,7 @@
 
   function scheduleHintHide(durationMs) {
     clearHintTimer();
-    hintHideTimer = setTimeout(hideHint, Math.max(500, durationMs || 4000));
+    hintHideTimer = setTimeout(hideHint, Math.max(500, durationMs || 2000));
   }
 
   function clearHintTimer() {
@@ -498,15 +593,35 @@
     }
   }
 
+  let activeComposerEl = null;
+
+  function onInputActivity(e) {
+    if (!hintEl || !hintEl.classList.contains('enterpost-hint--visible')) return;
+    const composer = findComposer(e.target);
+    if (composer) {
+      hideHint();
+    }
+  }
+
+  function installInputWatcher() {
+    if (window.top !== window.self) return;
+    document.addEventListener('input', onInputActivity, true);
+    document.addEventListener('compositionstart', onInputActivity, true);
+  }
+
   function onFocusIn(e) {
     if (!state.showHint) return;
     const composer = findComposer(e.target);
     if (!composer) return;
+    // Don't re-show if focus is moving within the same composer session
+    if (composer === activeComposerEl) return;
+    activeComposerEl = composer;
+
     if (!ensureHintReady()) return;
     currentComposer = composer;
     refreshAnchor();
     updateHintContent();
-    showHint(4000);
+    showHint(2000);
   }
 
   function onFocusOut(e) {
@@ -520,6 +635,7 @@
         refreshAnchor();
         return;
       }
+      activeComposerEl = null;
       hideHint();
       currentComposer = null;
       currentAnchor = null;

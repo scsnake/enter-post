@@ -10,10 +10,10 @@
     <div id="site-status" class="site-status">…</div>
   </header>
 
-  <section class="modes">
-    <h2 data-i18n="popupSendMode">Send mode</h2>
+  <section class="modes post-modes">
+    <h2 data-i18n="popupPostSendMode">Post / Feed Send Mode</h2>
     <label class="mode-option">
-      <input type="radio" name="mode" value="ctrl-enter-send">
+      <input type="radio" name="post-mode" value="ctrl-enter-send">
       <div>
         <div class="mode-title">
           <span class="mode-keys">
@@ -28,7 +28,39 @@
       </div>
     </label>
     <label class="mode-option">
-      <input type="radio" name="mode" value="enter-send">
+      <input type="radio" name="post-mode" value="enter-send">
+      <div>
+        <div class="mode-title">
+          <span class="mode-keys"><kbd>Enter</kbd></span>
+          <span data-i18n="popupSuffixSends">sends</span>
+        </div>
+        <div class="mode-sub">
+          <span class="mode-keys"><kbd>Shift</kbd>+<kbd>Enter</kbd></span>
+          <span data-i18n="popupSuffixNewline">inserts newline</span>
+        </div>
+      </div>
+    </label>
+  </section>
+
+  <section class="modes chat-modes">
+    <h2 data-i18n="popupChatSendMode">Chat / Messenger Send Mode</h2>
+    <label class="mode-option">
+      <input type="radio" name="chat-mode" value="ctrl-enter-send">
+      <div>
+        <div class="mode-title">
+          <span class="mode-keys">
+            <kbd>Ctrl</kbd>/<kbd>⌘</kbd>+<kbd>Enter</kbd>
+          </span>
+          <span data-i18n="popupSuffixSends">sends</span>
+        </div>
+        <div class="mode-sub">
+          <span class="mode-keys"><kbd>Enter</kbd></span>
+          <span data-i18n="popupSuffixNewline">inserts newline</span>
+        </div>
+      </div>
+    </label>
+    <label class="mode-option">
+      <input type="radio" name="chat-mode" value="enter-send">
       <div>
         <div class="mode-title">
           <span class="mode-keys"><kbd>Enter</kbd></span>

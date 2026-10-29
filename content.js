@@ -61,8 +61,12 @@
   }
 
   function applySettings(data) {
-    state.postMode = data.postMode === 'enter-send' ? 'enter-send' : 'ctrl-enter-send';
-    state.chatMode = data.chatMode === 'ctrl-enter-send' ? 'ctrl-enter-send' : 'enter-send';
+    // Migrate the pre-0.2.2 single `globalMode` key when new keys are absent.
+    const legacy = data.globalMode;
+    const post = data.postMode !== undefined ? data.postMode : legacy;
+    const chat = data.chatMode !== undefined ? data.chatMode : legacy;
+    state.postMode = post === 'enter-send' ? 'enter-send' : 'ctrl-enter-send';
+    state.chatMode = chat === 'ctrl-enter-send' ? 'ctrl-enter-send' : 'enter-send';
     state.showHint = data.showHint !== false;
     const siteEnabled = data.siteEnabled || {};
     state.enabled = siteEnabled[platform.id] !== false;
@@ -70,38 +74,42 @@
 
   // ---- Key handling --------------------------------------------------------
 
-  function getActiveMode(target) {
-    if (platform.id === 'facebook' && target) {
-      const placeholder = target.placeholder || target.getAttribute('placeholder') || target.getAttribute('aria-placeholder') || '';
-      if (placeholder === 'Aa') {
-        return state.chatMode;
-      }
-    }
-    if (platform.id === 'instagram' && target) {
-      const placeholder = target.placeholder || target.getAttribute('placeholder') || target.getAttribute('aria-placeholder') || '';
-      if (placeholder.includes('Message') || placeholder.includes('訊息') || placeholder.includes('消息')) {
-        return state.chatMode;
-      }
-    }
-    if (platform.id === 'threads' && target) {
-      const placeholder = target.placeholder || target.getAttribute('placeholder') || target.getAttribute('aria-placeholder') || '';
-      if (placeholder.includes('Message') || placeholder.includes('訊息') || placeholder.includes('消息')) {
-        return state.chatMode;
-      }
-    }
-    if (platform.id === 'x' && target) {
-      if (target.tagName === 'TEXTAREA' && (target.getAttribute('data-testid') === 'dm-composer-textarea' || target.placeholder === 'Message')) {
-        return state.chatMode;
-      }
-    }
-    return platform.type === 'chat' ? state.chatMode : state.postMode;
+  function placeholderOf(el) {
+    return el.placeholder || el.getAttribute('placeholder') || el.getAttribute('aria-placeholder') || '';
   }
 
-  function isSendCombo(e) {
+  // True when a hybrid platform's composer is a chat/DM input.
+  function isChatComposer(el) {
+    if (!el) return platform.type === 'chat';
+    if (platform.id === 'facebook') {
+      return placeholderOf(el) === 'Aa';
+    }
+    if (platform.id === 'instagram' || platform.id === 'threads') {
+      const ph = placeholderOf(el);
+      return ph.includes('Message') || ph.includes('訊息') || ph.includes('消息');
+    }
+    if (platform.id === 'x') {
+      const id = el.getAttribute('data-testid');
+      return id === 'dm-composer-textarea' || id === 'dmComposerTextInput' || placeholderOf(el) === 'Message';
+    }
+    return platform.type === 'chat';
+  }
+
+  function getActiveMode(el) {
+    return isChatComposer(el) ? state.chatMode : state.postMode;
+  }
+
+  // Native send key of the specific composer. DM inputs send on plain Enter.
+  function nativeSendFor(el) {
+    if (platform.type === 'post' && isChatComposer(el)) return 'Enter';
+    return platform.nativeSend;
+  }
+
+  function isSendCombo(e, composer) {
     if (e.key !== 'Enter') return false;
     if (e.altKey) return false;
     const ctrlish = IS_MAC ? e.metaKey : e.ctrlKey;
-    const mode = getActiveMode(e.target);
+    const mode = getActiveMode(composer);
     if (mode === 'ctrl-enter-send') {
       return ctrlish && !e.shiftKey;
     }
@@ -109,11 +117,11 @@
     return !e.shiftKey;
   }
 
-  function isNewlineCombo(e) {
+  function isNewlineCombo(e, composer) {
     if (e.key !== 'Enter') return false;
     if (e.altKey) return false;
     const ctrlish = IS_MAC ? e.metaKey : e.ctrlKey;
-    const mode = getActiveMode(e.target);
+    const mode = getActiveMode(composer);
     if (mode === 'ctrl-enter-send') {
       // Plain Enter = newline; Shift+Enter = newline (permissive).
       return !ctrlish;
@@ -122,10 +130,10 @@
     return e.shiftKey && !ctrlish;
   }
 
-  function nativeWouldSend(e) {
+  function nativeWouldSend(e, composer) {
     if (e.key !== 'Enter' || e.altKey) return false;
     const ctrlish = IS_MAC ? e.metaKey : e.ctrlKey;
-    if (platform.nativeSend === 'Ctrl+Enter') return ctrlish && !e.shiftKey;
+    if (nativeSendFor(composer) === 'Ctrl+Enter') return ctrlish && !e.shiftKey;
     // nativeSend === 'Enter'
     return !e.shiftKey && !ctrlish;
   }
@@ -159,8 +167,8 @@
     const composer = findComposer(e.target);
     if (!composer) return;
 
-    const wantsSend = isSendCombo(e);
-    const wantsNewline = isNewlineCombo(e);
+    const wantsSend = isSendCombo(e, composer);
+    const wantsNewline = isNewlineCombo(e, composer);
     if (!wantsSend && !wantsNewline) return;
 
     if (wantsNewline) {
@@ -177,7 +185,7 @@
       // Send intent. If the site's native combo matches, let its own send
       // flow run — it handles validation / attachments / etc. better than
       // our synthesized click or keypress can. Otherwise intercept.
-      if (nativeWouldSend(e)) return;
+      if (nativeWouldSend(e, composer)) return;
       e.preventDefault();
       e.stopImmediatePropagation();
       state.lastError = null;
@@ -205,7 +213,7 @@
   // ---- Newline insertion ---------------------------------------------------
 
   function insertNewline(el) {
-    if (platform.insertNewline === 'textarea' || el.tagName === 'TEXTAREA' || el.tagName === 'INPUT') {
+    if (el.tagName === 'TEXTAREA' || el.tagName === 'INPUT') {
       insertNewlineTextarea(el);
     } else {
       insertNewlineContenteditable(el);
@@ -295,7 +303,7 @@
       return;
     }
     // Fallback: synthesize the site's native send combo on the composer.
-    const useCtrl = platform.nativeSend === 'Ctrl+Enter';
+    const useCtrl = nativeSendFor(composer) === 'Ctrl+Enter';
     const init = {
       key: 'Enter',
       code: 'Enter',
@@ -340,7 +348,7 @@
   }
 
   function nativeCombos() {
-    if (platform.nativeSend === 'Ctrl+Enter') {
+    if (nativeSendFor(currentComposer) === 'Ctrl+Enter') {
       return { send: ['Ctrl', 'Enter'], newline: ['Enter'] };
     }
     return { send: ['Enter'], newline: ['Shift', 'Enter'] };
@@ -401,6 +409,7 @@
     hintEl.querySelector('[data-slot="label-newline"]').textContent = t('hintLabelNewline');
     const closeBtn = hintEl.querySelector('.enterpost-hint__close');
     closeBtn.setAttribute('aria-label', t('hintDismiss'));
+    closeBtn.addEventListener('mousedown', (ev) => ev.preventDefault()); // keep composer focus
     closeBtn.addEventListener('click', hideHint);
     hintEl.addEventListener('mouseenter', clearHintTimer);
     hintEl.addEventListener('mouseleave', () => scheduleHintHide(1500));

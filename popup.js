@@ -23,10 +23,13 @@
   function load() {
     chrome.storage.sync.get(null, (data) => {
       const settings = { ...DEFAULTS, ...(data || {}) };
-      const postMode = settings.postMode === 'enter-send' ? 'enter-send' : 'ctrl-enter-send';
+      const legacy = (data || {}).globalMode;
+      const postRaw = (data || {}).postMode !== undefined ? data.postMode : (legacy !== undefined ? legacy : settings.postMode);
+      const chatRaw = (data || {}).chatMode !== undefined ? data.chatMode : (legacy !== undefined ? legacy : settings.chatMode);
+      const postMode = postRaw === 'enter-send' ? 'enter-send' : 'ctrl-enter-send';
       postModeInputs().forEach((r) => { r.checked = r.value === postMode; });
 
-      const chatMode = settings.chatMode === 'ctrl-enter-send' ? 'ctrl-enter-send' : 'enter-send';
+      const chatMode = chatRaw === 'ctrl-enter-send' ? 'ctrl-enter-send' : 'enter-send';
       chatModeInputs().forEach((r) => { r.checked = r.value === chatMode; });
       showHintInput().checked = settings.showHint !== false;
       renderSites(settings.siteEnabled || {});

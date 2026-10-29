@@ -74,7 +74,7 @@
       hosts: ['reddit.com', 'www.reddit.com', 'new.reddit.com', 'old.reddit.com'],
       nativeSend: 'Ctrl+Enter',
       composerSelector: 'shreddit-composer [contenteditable="true"], .public-DraftEditor-content, textarea.commentarea textarea, textarea[name="text"]',
-      sendButtonSelector: 'button[slot="submit-button"], button:has(> span:contains("Comment"))',
+      sendButtonSelector: 'button[slot="submit-button"]',
       insertNewline: 'contenteditable',
     },
     {

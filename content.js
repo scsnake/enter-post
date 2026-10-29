@@ -150,6 +150,8 @@
 
   function onKeydown(e) {
     if (!state.enabled) return;
+    // Ignore synthetic events (including our own fallback send) to avoid remapping loops.
+    if (!e.isTrusted) return;
 
     // Immediately dismiss hint on any user keystroke inside composer
     if (hintEl && hintEl.classList.contains('enterpost-hint--visible')) {
